@@ -1,0 +1,21 @@
+server:
+  port: 8080
+datasource:
+  driverName: mysql
+  host: 127.0.0.1
+  port: 3306
+  dataBase: AlgoServer
+  username: root
+  password: '001228'
+  charset: utf8
+  parseTime: True
+  loc: Local
+oss:
+  OSSBucket: algotest123
+  OSSEndpoint: oss-cn-beijing.aliyuncs.com
+  OSSAccessKeyID:
+  OSSAccessKeySecret:
+email:
+  email: '858689519@qq.com'
+  password:
+
