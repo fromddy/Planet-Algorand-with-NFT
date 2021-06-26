@@ -18,25 +18,27 @@
     <![endif]-->
 </head>
 <body>
-<!--    &lt;!&ndash; jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) &ndash;&gt;-->
-<!--    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>-->
-<!--    &lt;!&ndash; 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 &ndash;&gt;-->
-<!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>-->
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
 
-<script src="./downloadJS/juqery.min.js"></script>
-<script src="./downloadJS/bootstrap.min.js"></script>
+<!--<script src="./downloadJS/juqery.min.js"></script>-->
+<!--<script src="./downloadJS/bootstrap.min.js"></script>-->
 <script src="./node_modules/crypto-js/crypto-js.js"></script>
 <script src="./node_modules/algosdk/dist/browser/algosdk.min.js"></script>
-
 <!--    <script src="./index.js"></script>-->
+<script src="./utility/voyage.js"></script>
+<script src="./utility/planet.js"></script>
 <script src="./utility/connect.js"></script>
 <script src="./utility/signup.js"></script>
 <script src="./utility/star.js"></script>
 <script src="./utility/asa.js"></script>
 <script src="./utility/collect.js"></script>
-<script src="./utility/voyage.js"></script>
+<script src="./utility/sell.js"></script>
 <script src="./utility/contract.js"></script>
 <script src="./utility/order.js"></script>
+<script src="./utility/bid.js"></script>
 <script src="./utility/upload.js"></script>
 
 <!-- Fixed navbar -->
@@ -51,25 +53,27 @@
                 <span class="icon-bar"></span>
             </button>
             <!--          <a class="navbar-brand navbar-left" href="#">-->
-
             <!--            Plant-->
-
             <!--          </a>-->
         </div>
         <!--        voyage star collect upload order-->
-        <div id="myTab" class="navbar-collapse collapse">
+        <div id="myTab" class="navbar-collapse collapse" >
 
             <ul id="navbar-left" class="nav navbar-nav">
-                <li class="active"><a href="#Planet">Planet</a></li>
-                <li><a id="__voyage" href="#voyage" onclick="voyage()"> voyage</a></li>
-                <li><a href="#star" onclick="star()">star</a></li>
-                <li><a href="#collect" onclick="collect()"> collect </a></li>
-                <li><a href="#sell">sell</a></li>
-                <li><a href="#upload">upload </a></li>
-                <li><a href="#order" onclick="order()">order </a></li>
-                <li><a onclick="signup()" href="#signup">signup </a></li>
+                <li class="active"><a id="__planet" a href="#Planet" onclick="planet()" >Planet</a></li>
+                <li><a id="__voyage" href="#voyage"  onclick="voyage()"> voyage</a></li>
+                <li><a id="__star"   href="#star"    onclick="star()">asset</a></li>
+<!--                <li><a href="#collect" onclick="collect()"> collect </a></li>-->
+                <li><a id="__sell"   href="#sell"    onclick="sell_check()">sell</a></li>
+                <li><a id="__upload" href="#upload"  onclick="upload_init()">upload </a></li>
+                <li><a id="__bid"    href="#bid"     onclick="bid_head()">bid </a></li>
+                <li><a id="__order"  href="#order"   onclick="order()">order </a></li>
+                <li><a id="__signup" href="#signup"  onclick="signup()">signup </a></li>
             </ul>
             <script>
+                $(function(){
+                    document.getElementById("__planet").click();
+                })
                 $(function () {
                     $('#myTab a:last').tab('show');
                 })
@@ -80,7 +84,7 @@
             </script>
             <ul class="nav navbar-nav  navbar-right">
                 <li class="dropdown">
-                    <a onclick="connect_Genesis()" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                    <a id="account" onclick="connect_Genesis()" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                        aria-haspopup="true" aria-expanded="false">account <span class="caret"></span></a>
                     <ul id="accounts-list" class="dropdown-menu">
                     </ul>
@@ -92,7 +96,6 @@
 </nav>
 
 <!--        voyage star collect upload order-->
-
 <div id="alert" class="navbar-default  navbar-fixed-bottom">
     <div id="connect-yes-AlgoSigner" onclick="connect_disappear(this)">
         <!--        <div  class="alert alert-success text-center" >-->
@@ -197,35 +200,65 @@
 
 
 </div> <!--end of alert -->
-
-
 <br><br><br><br>
-
-
 <div class="tab-content">
     <div class="tab-pane active" id="Planet">
-        <div class="container theme-showcase" role="main">
 
-            <!-- Main jumbotron for a primary marketing message or call to action -->
-            <div class="jumbotron">
-                <h1>Planet - Algorand with NFT </h1>
-                <p> We call the NFT you created star</p>
-                <!--                <p>This is a template showcasing the optional theme stylesheet included in Bootstrap. Use it as a starting point to create something more unique by building on or modifying it.</p>-->
-                <!-- <img src="https://algotest123.oss-cn-beijing.aliyuncs.com/test/a7e32398e4e7a1168ea9496a0cb4821af1c3ec0a" class="text-center" width="1010px" height="300px"> -->
-                 <img src="https://algotest123.oss-cn-beijing.aliyuncs.com/test/a7e32398e4e7a1168ea9496a0cb4821af1c3ec0a" class="text-center" style="max-width:100%;" width="1100px" height="300px">
-                 <!-- <img src="https://algotest123.oss-cn-beijing.aliyuncs.com/test/fdc4a48708fea2de233cfdcc02e822b93085a26c"  width="" height="540"> -->
-               <!--   <img class="text-center" width="" height="540"> -->
-            </div>
+        <br><br><br><br>
+
+        <div class="container" style="height: 405px">
+            <div id="planet-photo" class="photo"></div>
+            <div id="planet-intro" class="intro text-left"></div>
+        </div>
+        <style>
+            .photo{
+                float:left;
+                width:70%;
+                text-align: center;
+
+            }
+            .intro{
+                float:right;
+                width:30%;
+            }
+        </style>
+        <div class="container">
+        <div id="planet-work"></div>
         </div>
 
+        <div class="text-center">
 
+
+            <button  onclick="planet()" type="button" class="btn  btn-default"
+                    style="display:block;margin:0 auto">&nbsp;&nbsp;&nbsp;change &nbsp;
+            </button>
+        </div>
+        <br><br>
+
+
+
+
+
+
+
+
+        <div class="container theme-showcase" role="main" >
+            <!-- Main jumbotron for a primary marketing message or call to action -->
+            <div class="jumbotron">
+                <h1 class="text-center">Planet - Algorand with NFT </h1>
+                <p class="text-center"> If you love me, False can be True. </p>
+
+
+                <!--                <p>This is a template showcasing the optional theme stylesheet included in Bootstrap. Use it as a starting point to create something more unique by building on or modifying it.</p>-->
+
+<!--                 <img src="https://algotest123.oss-cn-beijing.aliyuncs.com/test/a7e32398e4e7a1168ea9496a0cb4821af1c3ec0a" class="text-center" style="max-width:100%;" width="1100px" height="300px">-->
+            </div>
+        </div>
     </div>
     <div class="tab-pane" id="voyage">
 
         <div class="tab-pane text-center" id="voyage-content">
-
             <div id="voyage-img" style="text-align:center">
-
                 <!--                    <img src="./images/come.jpg" class="text-center" width="" height="540">-->
 
             </div>
@@ -234,21 +267,20 @@
 
             </div>
             <div style="text-align: center" class="">
-                <h3 id="voyage-price" class="text-center">price : 1000 algo(s)</h3>
+                <h3 id="voyage-price" class="text-center"></h3>
                 <div id="buyer-address"></div>
-                <h5> you may need to pay a little more as gas fee</h5>
+<!--                <h4> you may need to pay a little more as gas fee</h4>-->
+                <h4> After you press the button, </h4>
+                <h5> please wait patiently until the "Transaction confirmed in round xxxxxx" message shows up, </h5>
+                <h4>then you can press next button :)</h4>
             </div>
-
 
             <div style="text-align:center">
                 <button onclick="Love()" type="button" class="btn btn-lg btn-info"
                         style="display:block;margin:0 auto;width: 30%">add to my like list
                 </button>
-
-
                 <div id="bid-information-zero" class="text-center">
                     <!--                        please wait for the transaction to be confirmed-->
-
                 </div>
                 <br><br>
 
@@ -262,6 +294,15 @@
                     <!--                        please wait for the transaction to be confirmed-->
 
                 </div>
+<!--                <br><br>-->
+<!--                <button onclick="AliceGetMoney()" type="button" class="btn btn-lg btn-info"-->
+<!--                        style="display:block;margin:0 auto;width: 30%">aliceGetMoney-->
+<!--                </button>-->
+<!--                <div id="alice-information" class="text-center">-->
+<!--                    &lt;!&ndash;                        please wait for the transaction to be confirmed&ndash;&gt;-->
+
+<!--                </div>-->
+
 
 
             </div>
@@ -269,7 +310,7 @@
 
             <div style="text-align:center">
                 <button onclick="voyage()" type="button" class="btn btn-lg btn-default"
-                        style="display:block;margin:0 auto;width: 30%">change to other one
+                        style="display:block;margin:0 auto;width: 30%">change to another one
                 </button>
 
             </div>
@@ -283,54 +324,92 @@
     </div>
     <div class="tab-pane" id="star">
 
-        <div id="star-content" class="text-center">
+        <div id="star-content" class="text-center container">
             <div id="star-img">
 
             </div>
-            <div class="page-header">
-                <h1 id="star-name">
 
-                </h1>
+            <div class="page-header">
+                <h1 id="star-name"> </h1>
                 <h4 id="star-introduction"></h4>
             </div>
+
+
+            <div>
+                <button type="button" class="btn btn-info btn-lg text-center" onclick="listcreate()">
+                    &nbsp;&nbsp;&nbsp;&nbsp;Created&nbsp;&nbsp;&nbsp; &nbsp;
+                </button>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                <button type="button" class="btn btn-info btn-lg text-center"  onclick="listown()">
+                    &nbsp;  &nbsp;  Collected&nbsp;&nbsp; &nbsp;
+                </button>
+            </div>
+            <br>
+
+
+
+
+
 
             <div id="star-work">
 
             </div>
 
 
-        </div>
-    </div>
-    <div class="tab-pane" id="collect">
-
-
-        <div id="collect-content" class="text-center">
-            <div id="collect-img">
-
-            </div>
-            <div class="page-header">
-                <h1 id="collect-name">
-
-                </h1>
-                <h4 id="collect-introduction"></h4>
-            </div>
-
             <div id="collect-work">
 
             </div>
 
 
+
         </div>
 
-
     </div>
+<!--    <div class="tab-pane" id="collect">-->
+<!--        <div id="collect-content" class="text-center container">-->
+<!--            <div id="collect-img"> </div>-->
+<!--            <div class="page-header">-->
+<!--                <h1 id="collect-name"> </h1>-->
+<!--                <h4 id="collect-introduction"></h4>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
     <div class="tab-pane" id="sell">
         <div class="container">
             <div class="page-header">
-                <h1 class="text-center">coming soon...</h1>
+                <h1 class="text-center">Sell </h1>
+            </div>
+            <div id="sell-NFT" style="text-align: center">
+                    <div id="sell-img"></div>
+                </button>
             </div>
 
-        </div>
+            <div style="position: absolute;left: 50%;width:400px;margin-left:-200px;">
+
+                <br>
+                <form class="bs-example bs-example-form" role="form">
+                    <div class="input-group ">
+                        <span class="input-group-addon"> new amount  </span>
+                        <input id="sell-amount" type="text" class="form-control"
+                               placeholder="the new price of this NFT work in algo(s) :)">
+                    </div>
+                    <br>
+                </form>
+
+                <button id="sell-button" onclick="sell_button()" type="button" class="btn  btn-info"
+                        style="display:block;margin:0 auto">&nbsp;&nbsp;&nbsp;Add to sale queue&nbsp;&nbsp;
+                </button>
+
+
+                <div id="sell-code">
+
+                </div>
+
+
+
+            </div>
+
+    </div>
+
     </div>
     <div class="tab-pane" id="upload">
         <div class="container">
@@ -481,6 +560,19 @@
 
 
     </div> <!--end of upload-->
+    <div class="tab-pane" id="bid">
+        <div id="bid-content">
+            <div id="bid-notice">
+
+            </div>
+            <div id="alice-information" class="text-center"> </div>
+            <div id="bid-work">
+
+
+            </div>
+        </div>
+
+    </div>
     <div class="tab-pane" id="order">
         <div id="order-content" class="text-center">
             <div id="order-Notice">
@@ -503,7 +595,7 @@
 
 
             </div>
-
+            <div id="order-button-code"> </div>
             <div id="order-next-button">
 
             </div>
@@ -645,9 +737,6 @@
 
         <br><br><br><br><br><br><br><br>
     </div>
-
 </div>
-
-
 </body>
 </html>

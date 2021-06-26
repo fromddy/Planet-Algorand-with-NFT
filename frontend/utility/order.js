@@ -5,6 +5,7 @@ let success_url = "http://" + order_end_url + ":8080/success";
 
 
 function order() {
+    document.getElementById("order-button-code").innerHTML="";
     let bidData = new FormData();
     bidData.append("bobAddress", signup_address);
     $.ajax({
@@ -99,10 +100,12 @@ function order() {
 
                         let content3 = " <button onclick=\"helloBob()\" type=\"button\" class=\"btn btn-lg btn-info\" style=\"display:block;margin:0 auto;width: 30%\" >accept</button>";
                         document.getElementById("order-button").innerHTML = content3;
+
                         let content4 = " <br> <button onclick=\"order()\" type=\"button\" class=\"btn btn-lg btn-default\" style=\"display:block;margin:0 auto;width: 30%\" >Process the next order</button>";
                         if (tx_cnt > 1) document.getElementById("order-next-button").innerHTML = content4;
                         else {
-                            document.getElementById('order-next-button').innerHTML = "";
+                            let content5 = " <br> <button onclick=\"order()\" type=\"button\" class=\"btn btn-lg btn-default\" style=\"display:block;margin:0 auto;width: 30%\" >the order above is the only one :) </button>";
+                            document.getElementById('order-next-button').innerHTML = content5;
                         }
 
 

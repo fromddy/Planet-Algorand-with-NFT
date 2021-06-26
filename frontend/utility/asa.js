@@ -187,7 +187,7 @@ function asa_last() {
                 "                        </div>\n" +
                 "                        <div class=\"panel-body text-center\">\n" +
                 "                            <h4>Your NFT work has been minted :)</h4>\n" +
-                "               <h4> You can check it in [star] .</h4></n>" +
+                "               <h4> You can check it in [asset] .</h4></n>" +
                 "\n" +
                 "                        </div>\n" +
                 "                    </div>\n";

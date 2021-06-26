@@ -11,6 +11,8 @@ function collectComeTo(star_asaId) {
 }
 
 function listown() {
+    document.getElementById("star-work").innerHTML="";
+
     let formData = new FormData();
     formData.append("address", signup_address);
 
@@ -43,15 +45,19 @@ function listown() {
 
             if (cnt == 0) {
 
-                let content = "<h3 clas=\'text-center\'>let's buy some NFT:)</h3>";
+                let content = "<h3 class=\'text-center\'>let's buy some NFT:)</h3>";
                 console.log(content);
 
                 document.getElementById('collect-work').innerHTML = content;
 
 
             } else {
+                let before="<div class=\"page-header\">\n" +
 
-                let content = "      <div class=\"bs-example\" data-example-id=\"thumbnails-with-custom-content\">\n" +
+                    "                <h2 id=\"star-introduction\">what I collected </h2>\n" +
+                    "            </div>\n";
+
+                let content = before+"      <div class=\"bs-example\" data-example-id=\"thumbnails-with-custom-content\">\n" +
                     "                        <div class=\"row\">";
 
                 for (let i = 0; i < cnt; i++) {
@@ -84,7 +90,10 @@ function listown() {
                         "</p>\n" +
                         "<p> <a onclick=\"" +
                         "collectComeTo(" + __asaId + ")" +
-                        "\" class=\"btn btn-info\"> check </a> </p>" +
+                        "\" class=\"btn btn-info\"> check </a> &nbsp; " +
+                        " <a onclick=\"" +
+                        "sell(" + __asaId+")" +
+                        "\" class=\"btn btn-info\"> &nbsp;&nbsp;sell &nbsp;&nbsp;</a> </p>" +
                         // "            <p><a href=\"#\" class=\"btn btn-primary\" role=\"button\">Button</a> <a href=\"#\" class=\"btn btn-default\" role=\"button\">Button</a></p>\n" +
                         "        </div>\n" +
                         "    </div>\n" +
@@ -94,7 +103,7 @@ function listown() {
 
                 }
                 content += "</div></div>";
-                // console.log(content);
+                console.log(content);
                 document.getElementById("collect-work").innerHTML = content;
             }
 
@@ -147,6 +156,8 @@ function collect() {
                 document.getElementById("collect-img").innerHTML = tmp;//signup_up_avatar;
                 document.getElementById('collect-name').innerText = signup_userName;
                 document.getElementById('collect-introduction').innerText = signup_introduction;
+
+
                 listown();
 
             },

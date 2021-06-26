@@ -191,8 +191,7 @@ async function waitForConfirmation(algodclient, txId, tagId) {
 }
 
 // compileContract: maxfee,amount,assetId, aliceAddress,bobAddress
-async function compileContract() {
-
+async function compileContract_before() {
     // 这里需要验证参数
     var p = new Promise(function (resolve) {
         // read the contract file
@@ -273,6 +272,100 @@ async function compileContract() {
 }
 
 
+// compileContract: maxfee,amount,assetId, aliceAddress,bobAddress
+async function compileContract() {
+    // 这里需要验证参数
+
+    var p = new Promise(function (resolve) {
+        // read the contract file
+        // const filePath = path.join(__dirname, contractDir);
+        // const data = fs.readFileSync(filePath);
+        const data = "#pragma version 3\n" +
+            "global GroupSize\n" +
+            "int 1\n" +
+            "==\n" +
+            "txn GroupIndex\n" +
+            "int 0\n" +
+            "==\n" +
+            "&&\n" +
+            "txn TypeEnum\n" +
+            "int pay\n" +
+            "==\n" +
+            "&&\n" +
+            "txn Amount\n" +
+            "int 0\n" +
+            "==\n" +
+            "&&\n" +
+            "txn Fee\n" +
+            "int 20000\n" +
+            "<=\n" +
+            "&&\n" +
+            "txn CloseRemainderTo\n" +
+            "addr "+aliceAddress+"\n" +
+            "==\n" +
+            "&&\n" +
+            "txn RekeyTo\n" +
+            "global ZeroAddress\n" +
+            "==\n" +
+            "&&\n" +
+            "bz final\n" +
+            "int 1\n" +
+            "return\n" +
+            "final:\n" +
+            "int 0\n" +
+            "global GroupSize\n" +
+            "int 2\n" +
+            "==\n" +
+            "txn TypeEnum\n" +
+            "int pay\n" +
+            "==\n" +
+            "&&\n" +
+            "txn GroupIndex\n" +
+            "int 0\n" +
+            "==\n" +
+            "&&\n" +
+            "txn Fee\n" +
+            "int 20000\n" +
+            "<=\n" +
+            "&&\n" +
+            "txn Amount\n" +
+            "int "+amount+"\n" +
+            "==\n" +
+            "&&\n" +
+            "txn CloseRemainderTo\n" +
+            "addr "+bobAddress+"\n" +
+            "==\n" +
+            "&&\n" +
+            "gtxn 1 TypeEnum\n" +
+            "int axfer\n" +
+            "==\n" +
+            "gtxn 1 XferAsset\n" +
+            "int "+assetId+"\n" +
+            "==\n" +
+            "&&\n" +
+            "gtxn 1 AssetReceiver\n" +
+            "addr "+aliceAddress+"\n" +
+            "==\n" +
+            "&&\n" +
+            "gtxn 1 AssetSender\n" +
+            "global ZeroAddress\n" +
+            "==\n" +
+            "&&\n" +
+            "gtxn 1 AssetAmount\n" +
+            "int 1\n" +
+            "==\n" +
+            "&&\n" +
+            "&&\n" +
+            "||\n";
+        contract_content = data;
+
+        // Compile teal contract
+        algodclient.compile(data).do().then(resolve).catch(console.log);
+    })
+    return p;
+}
+
+
 //AlicePayContract： maxfee,amount,assetId,aliceAddress,fee=1000,minlimit=100000
 
 
@@ -324,7 +417,6 @@ async function helloAlice() {
         amount: payamount,
         ...suggestedParmas,
     });
-
     let binaryTx = sdkTx.toByte();
     let base64Tx = AlgoSigner.encoding.msgpackToBase64(binaryTx);
     let signedTxs = await AlgoSigner.signTxn([
@@ -343,14 +435,15 @@ async function helloAlice() {
 
             })
             .catch((e) => {
+                console.log(e);
+
                 alert(JSON.stringify(e, 0, 2));
+
 
             });
     }).catch((e) => {
         alert("to check if you have enough algos:| \r\n" + JSON.stringify(e, 0, 2));
     });
-
-
 }
 
 function sendsuccess() {
@@ -361,8 +454,6 @@ function sendsuccess() {
     bidData.append("asaId", assetId);
     bidData.append("hash", contract_hash);
     bidData.append("contract", contract_content);
-
-
     $.ajax({
         url: voyage_bid,
         datatype: 'json',
@@ -381,6 +472,8 @@ function sendsuccess() {
             }
         },
         error: function (data) {
+            console.log(data);
+
             alert(JSON.stringify(data, 0, 2));
         }
     });
@@ -389,10 +482,7 @@ function sendsuccess() {
 
 //hellobob： amount,assetId,aliceAddress,bobAddress,assetId
 async function helloBob() {
-
-
     const closeRemainderTo = bobAddress;
-
     const note = undefined;
     const revocationTarget = undefined;
     let contract = await compileContract(maxfee, amount, assetId, aliceAddress);
@@ -437,62 +527,148 @@ async function helloBob() {
     signedTxs.push(signedAssetTransferTx);
 
     algodclient.sendRawTransaction(signedTxs).do().then((tx) => {
+        waitForConfirmation(algodclient, tx.txId, "order-button-code")
+            .then((d) => {
+                let lastmsg = new FormData();
 
+                lastmsg.append("aliceAddress", aliceAddress);
+                lastmsg.append("bobAddress", bobAddress);
+                lastmsg.append("asaId", assetId);
+                // alert("assertId"+assetId);
 
-        // let content = "  <br>\n" +
-        //     "                    <div class=\"panel panel-info\">\n" +
-        //     "                        <div class=\"panel-heading\">\n" +
-        //     "                            <h3 class=\"panel-title text-center\"> The bid information </h3>\n" +
-        //     "                        </div>\n" +
-        //     "                        <div id=\"bid-information-content\" class=\"panel-body text-center\">\n" +
-        //     "                            Wait a few seconds ...\n" +
-        //     "\n" +
-        //     "                        </div>\n" +
-        //     "                    </div>";
-        //
-        // document.getElementById("bob-bid-information").innerHTML = content;
-        //
-        // waitForConfirmation(algodclient, tx.txId, "bid-information-content")
-        //     .then(console.log)
-        //     .catch(console.log);
+                $.ajax({
+                    url: success_url,
+                    datatype: 'json',
+                    type: 'POST',
+                    async: true,
+                    timeout: 0,
+                    data: lastmsg,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        alert("success accpet:) \r\n" + JSON.stringify(data, 0, 2));
+                    },
+                    error: function (data) {
+                        alert(JSON.stringify(data, 0, 2));
+                    }
+                });
 
+            })
+            .catch((e) => {
+                alert(JSON.stringify(e, 0, 2));
 
+            });
     }).catch(console.log);
 
 
-    let lastmsg = new FormData();
 
-    lastmsg.append("aliceAddress", aliceAddress);
-    lastmsg.append("bobAddress", bobAddress);
-    lastmsg.append("asaId", assetId);
-    // alert("assertId"+assetId);
 
-    $.ajax({
-        url: success_url,
-        datatype: 'json',
-        type: 'POST',
-        async: true,
-        timeout: 0,
-        data: lastmsg,
-        cache: false,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            alert("success accpet:) \r\n" + JSON.stringify(data, 0, 2));
-        },
-        error: function (data) {
-            alert(JSON.stringify(data, 0, 2));
-        }
+}
+
+async function AliceGetMoney() {
+    const closeRemainderTo = aliceAddress;
+    const note = undefined;
+    const revocationTarget = undefined;
+    let contract = await compileContract();
+
+    let programBytes = AlgoSigner.encoding.base64ToMsgpack(contract.result);
+    const lsig = new algosdk.makeLogicSig(programBytes, undefined);
+    const contractAddress = lsig.address();
+
+    let params = await algodclient.getTransactionParams().do();
+    // buyerAccount, contractAddr, lsig
+    // make the algo payment tx from contract to buyer
+
+    let algoPaymentTx = algosdk.makePaymentTxnWithSuggestedParams(contractAddress, aliceAddress, 0, closeRemainderTo, note, params);
+    // make the asset transfer tx from buyer to Alice
+    // alert(assetId);
+    // alert(mememe);
+
+    // put 2 tx into an array
+    const txns = [algoPaymentTx];
+    // assign the group tx ID
+    const txGroup = algosdk.assignGroupID(txns);
+    const signedAlgoPaymentTx = algosdk.signLogicSigTransactionObject(txGroup[0], lsig);
+
+    let signedTxs = [];
+
+
+    signedTxs.push(signedAlgoPaymentTx.blob);
+
+
+    algodclient.sendRawTransaction(signedTxs).do().then((tx) => {
+        waitForConfirmation(algodclient, tx.txId, "alice-information")
+            .then((d) => {
+                console.log("I have been there");
+                // alert(JSON.stringify(d,0,2));
+                aliceGetMoney();
+
+            })
+            .catch((e) => {
+                alert(JSON.stringify(e, 0, 2));
+
+            });
+    }).catch((e) => {
+        console.log("catch");
+        console.log(JSON.stringify(e));
+
+        alert(JSON.stringify(e, 0, 2));
     });
 
 }
 
 
+
+function aliceGetMoney() {
+    let bidData = new FormData();
+    bidData.append("aliceAddress", aliceAddress);
+    bidData.append("bobAddress", bobAddress);
+    // bidData.append("amount", amount);
+    bidData.append("asaId", assetId);
+    // bidData.append("hash", contract_hash);
+    // bidData.append("contract", contract_content);
+
+    console.log("aliceGetMoney==============");
+    console.log("aliceAddress:"+aliceAddress);
+    console.log("bobAddress:"+bobAddress);
+    console.log("assetId:"+assetId);
+
+
+
+    $.ajax({
+        url: voyage_withdraw,
+        datatype: 'json',
+        type: 'POST',
+        async: false,
+        timeout: 0,
+        data: bidData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            console.log(data);
+
+            alert("alice get money successful !"+JSON.stringify(data,0,2));
+            document.getElementById("__bid").click();
+
+            // if (data['code'] == 0) {
+            //     alert('your bid is successfull:)');
+            // } else {
+            //     alert("your bid meets some problems \r\n" + JSON.stringify(data, 0, 2));
+            // }
+        },
+        error: function (data) {
+            alert("alice get money meet something wrong!"+JSON.stringify(data, 0, 2));
+        }
+    });
+}
+
+
+
+
 async function aliceWithdraw() {
-
-
     const closeRemainderTo = aliceAddress;
-
     const note = undefined;
     const revocationTarget = undefined;
     let contract = await compileContract(maxfee, amount, assetId, aliceAddress);

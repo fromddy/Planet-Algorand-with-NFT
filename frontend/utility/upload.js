@@ -12,6 +12,21 @@ let upload_tupian_oss = undefined;
 let upload_asaId = undefined;
 
 
+function upload_init(){
+
+
+    console.log("upload_init");
+    // let obj=document.getElementById("upload-NFT-input");
+    // obj.outerHTML=obj.outerHTML;
+    // document.getElementById("upload-NFT-button-img").innerHTML="";
+
+    document.getElementById("upload-first-code").innerHTML="";
+    document.getElementById("asa-code").innerHTML="";
+    document.getElementById("asa-last-code").innerHTML="";
+
+    return;
+}
+
 function upload_verify() {
     upload_address = signup_address;
     upload_state = signup_state;
@@ -78,6 +93,8 @@ async function upload_calSHA1() {
 
 
 async function upload() {
+
+
     if (connect_address == null) {
         alert("you need to click [accounts] first");
         return;

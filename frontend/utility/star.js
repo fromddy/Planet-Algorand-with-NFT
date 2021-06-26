@@ -11,6 +11,7 @@ function comeTo(star_asaId) {
 }
 
 function listcreate() {
+    document.getElementById("collect-work").innerHTML="";
     let formData = new FormData();
     formData.append("address", signup_address);
 
@@ -52,7 +53,13 @@ function listcreate() {
 
             } else {
 
-                let content = "      <div class=\"bs-example\" data-example-id=\"thumbnails-with-custom-content\">\n" +
+                let before="<div class=\"page-header\">\n" +
+
+                    "                <h2 id=\"star-introduction\">what I created </h2>\n" +
+                    "            </div>\n";
+
+
+                let content = before+"      <div class=\"bs-example\" data-example-id=\"thumbnails-with-custom-content\">\n" +
                     "                        <div class=\"row\">";
 
                 for (let i = 0; i < cnt; i++) {
