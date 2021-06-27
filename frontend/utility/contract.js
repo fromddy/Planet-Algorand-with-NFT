@@ -454,6 +454,8 @@ function sendsuccess() {
     bidData.append("asaId", assetId);
     bidData.append("hash", contract_hash);
     bidData.append("contract", contract_content);
+    console.log(contract_content);
+
     $.ajax({
         url: voyage_bid,
         datatype: 'json',
