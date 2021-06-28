@@ -13,9 +13,9 @@ datasource:
 oss:
   OSSBucket: algotest123
   OSSEndpoint: oss-cn-beijing.aliyuncs.com
-  OSSAccessKeyID:
-  OSSAccessKeySecret:
+  OSSAccessKeyID: 
+  OSSAccessKeySecret: 
 email:
   email: '858689519@qq.com'
-  password:
+  password: 
 

@@ -77,12 +77,14 @@ func MakeAsaInfoFromAsaid(asaId string) model.AsaInfo{
 }
 func GetManyFromLimit(limit int) ([]model.AsaInfo,error){
 	var list []model.AsaInfo
-	var asaFile []model.UserFile
-	err :=global.DBEngine.Order("RAND()").Limit(limit).Find(&asaFile).Error
+	//var asaFile []model.UserFile
+	var tmpFile []model.File
+	err :=global.DBEngine.Where("is_on_sail = ?",1).Order("RAND()").Limit(limit).Find(&tmpFile).Error
 	if err !=nil{
 		return nil,err
 	}
-	for _,v := range asaFile{
+	// 先从file中筛选正在出售的n个作品
+	for _,v := range tmpFile{
 		asaid := v.AsaId
 		file,userfile,err := GetFileFromAsaId(asaid)
 		if err!=nil{
@@ -99,6 +101,8 @@ func GetManyFromLimit(limit int) ([]model.AsaInfo,error){
 			Price:          userfile.Money,
 		}
 		list = append(list, *asa)
+
+
 	}
 	return list,nil
 
@@ -117,6 +121,6 @@ func CheckFileWhetherExist(filesha1 string)bool{
 
 func GetTransactionHistory(asaid string)[]model.Transaction{
 	var tranHistory []model.Transaction
-	global.DBEngine.Where("asa_id = ?",asaid).Find(&tranHistory)
+	global.DBEngine.Where("asa_id = ?",asaid).Where("status = ?",1).Find(&tranHistory)
 	return tranHistory
 }

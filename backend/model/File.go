@@ -8,5 +8,6 @@ type File struct {
 	FileHash string `gorm:"type:varchar(128);unique_index;not null"`
 	CreatorAddress string `gorm:"type:varchar(128);not null"`
 	OssAddress string `gorm:"type:varchar(128);unique_index;not null"`
+	IsOnSail int `gorm:"type:int(10);default:'1'"`
 }
 
