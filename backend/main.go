@@ -47,6 +47,8 @@ func RegistHandler()*gin.Engine{
 	r.POST("/userinfo",handler.QueryUser)
 	r.POST("/order",handler.GetAllOrders)
 	r.POST("/history",handler.History)
+	r.POST("/withdraw",handler.CancelTransaction)
+	r.POST("/payed",handler.GetPayedTrans)
 	return r
 }
 func main(){

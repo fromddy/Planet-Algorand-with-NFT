@@ -2,11 +2,17 @@ package handler
 
 import (
 	"Algo/dao"
+	"Algo/model"
 	util "Algo/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
+
+type TmpFile struct {
+	OssAddress string
+	model.Transaction
+}
 
 func CreateTransaction(c *gin.Context){
 	AliceAddress := c.PostForm("aliceAddress")
@@ -84,6 +90,60 @@ func CreateTransaction(c *gin.Context){
 
 }
 
+func CancelTransaction(c *gin.Context){
+	AliceAddress := c.PostForm("aliceAddress")
+	BobAddress := c.PostForm("bobAddress")
+	AsaId := c.PostForm("asaId")
+	isExist := dao.IsUserExist(AliceAddress)
+	if !isExist{
+		c.JSON(200,gin.H{
+			"code":-1,
+			"msg":"please first signup",
+			"data":nil,
+		})
+		return
+	}
+	isValidate := dao.IsEmailValidate(AliceAddress)
+	if !isValidate{
+		c.JSON(200,gin.H{
+			"code":-1,
+			"msg":"email not validate",
+			"data":nil,
+		})
+		return
+	}
+	isValidate = dao.IsEmailValidate(BobAddress)
+	if !isValidate{
+		c.JSON(200,gin.H{
+			"code":-1,
+			"msg":"email not validate",
+			"data":nil,
+		})
+		return
+	}
+	isExist = dao.IsUserExist(BobAddress)
+	if !isExist{
+		c.JSON(200,gin.H{
+			"code":-1,
+			"msg":"please first signup",
+			"data":nil,
+		})
+		return
+	}
+	result := dao.CheckAuth(BobAddress,AsaId)
+	if result{
+		c.JSON(500,util.GetResp(-1,"you do not own this asa",nil))
+		return
+	}
+	err := dao.Withdraw(AliceAddress,BobAddress,AsaId)
+
+	if err!=nil{
+		c.JSON(500,util.GetResp(-1,"fail to update the transaction",nil))
+		return
+	}
+	c.JSON(200,util.GetResp(0,"OK",nil))
+}
+
 func FinishTransaction(c *gin.Context){
 	AliceAddress := c.PostForm("aliceAddress")
 	BobAddress := c.PostForm("bobAddress")
@@ -147,7 +207,7 @@ func FinishTransaction(c *gin.Context){
 func SellASA(c *gin.Context){
 	Address := c.PostForm("address")
 	asaId := c.PostForm("asaId")
-	amout := c.PostForm("amout")
+	amout := c.PostForm("amount")
 	isExist := dao.IsUserExist(Address)
 	if !isExist{
 		c.JSON(200,gin.H{
@@ -231,6 +291,39 @@ func GetAllOrders(c *gin.Context){
 		return
 	}
 	trans,err := dao.GetAllOrder(bobAddress)
+	if err!=nil{
+		c.JSON(200,gin.H{
+			"code":-1,
+			"msg":"no such transaction exists",
+			"data":nil,
+		})
+		return
+	}
+	c.JSON(200,gin.H{
+		"code":0,
+		"msg":"OK",
+		"data":trans,
+	})
+
+}
+func GetPayedTrans(c *gin.Context){
+	aliceAddress := c.PostForm("aliceAddress")
+	if aliceAddress==""{
+		c.JSON(200,gin.H{
+			"code":-1,
+			"msg":"invalid parameters",
+			"data":nil,
+		})
+		return
+	}
+	trans,err := dao.GetAliceOrder(aliceAddress)
+	//var tmpResult []TmpFile
+	//for i,v := range trans{
+	//	t := &TmpFile{
+	//		OssAddress:  "",
+	//		Transaction: model.Transaction{},
+	//	}
+	//}
 	if err!=nil{
 		c.JSON(200,gin.H{
 			"code":-1,

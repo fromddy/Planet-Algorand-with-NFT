@@ -61,12 +61,28 @@ func ListAllCreator(address string)([]model.File,error){
 
 
 func ListAllOwner(address string)([]model.UserFile,error){
-	var file []model.UserFile
-	err := global.DBEngine.Where("address = ?",address).Find(&file).Error
+	var fileOwn []model.UserFile
+	err := global.DBEngine.Where("address = ?",address).Find(&fileOwn).Error
 	if err!=nil{
 		return nil, err
 	}
-	return file,nil
+	var createAdd []model.File
+	err = global.DBEngine.Where("creator_address = ?",address).Find(&createAdd).Error
+	if err!=nil{
+		return nil, err
+	}
+	m := make(map[string]string)
+	for _,v := range createAdd{
+		m[v.FileHash] = "Ok"
+	}
+	var fileown1 []model.UserFile
+	for _,v := range fileOwn{
+
+		if _,ok := m[v.FileHash];!ok{
+			fileown1 = append(fileown1,v)
+		}
+	}
+	return fileown1,nil
 }
 
 func IsUserExist(address string)bool{
