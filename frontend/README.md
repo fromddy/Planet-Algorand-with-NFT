@@ -4,8 +4,6 @@ maybe 战队
 
 我们实现了一个在algorand上进行NFT交易的平台，用户可以上传和购买NFT作品。
 
-
-
 前端主要采用了html, javascript 和 bootstrap3库;
 
 后端主要使用了go语言和gin框架。
