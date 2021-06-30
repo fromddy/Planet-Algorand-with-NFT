@@ -50,22 +50,40 @@ http-server .
 
 如果想要更换为本地运行的后端服务，前端部分需要打开 frontend/utility文件夹，把该文件夹下所有js文件中的url接口地址修改为本地运行的后端服务的接口地址。
 
-
-
 ### 后端代码的使用
 
-下载代码 go build之后得到可执行的server文件,然后在服务端文件根目录下新建三个文件夹
+服务端需要配置mysql和redis，mysql版本推荐使用5.7，其中并不需要创建数据表，gorm会自动迁移表。
+
+```
+mysql: create database AlgoServer charset=utf8;
+redis: config set requirepass test123
+```
+
+下载代码 go build之后得到可执行的server文件,编译所需要的依赖详见go.mod文件，
+在服务端文件根目录下新建四个个文件夹
 
 ```
 mkdir avatar # 暂存用户头像
-mkdir tmp # 暂存用户上传的NFT作品
+mkdir tmp # 暂存用户上传的ntf作品
 mkdir config # 配置文件存放处
 mkdir static # 前端页面存放处
 ```
 
-config文件夹下需要编辑application.yaml文档，模板代码中已给出，其中主要是mysql数据库的配置，其中并不需要创建数据表，后端会自动迁移表，以及阿里云oss的配置和后端邮箱服务的配置,redis的配置在cache文件夹下的redis.go中，创建和配置好数据库之后直接运行后端即可。访问xxxx:8080/public/index.html即可看到页面。后端文档和具体接口使用在https://hackmd.summershrimp.com/iF-HJ2YYTw-9Y5AaJRthOg?both 这里可以看到，static目录中应该存的是整个前端的文件夹，配置好的目录结构如下。
+config文件夹下需要编辑application.yaml文档，模板代码中已给出，
+
+主要配置mysql的连接以及阿里云oss的配置和后端邮箱服务的配置,redis的配置在cache文件夹下的redis.go中，
+
+创建和配置好数据库之后直接运行后端即可。
+
+访问xxxx:8080/public/index.html即可看到页面。
+
+后端文档和具体接口使用在https://hackmd.summershrimp.com/iF-HJ2YYTw-9Y5AaJRthOg?both 
+
+这里可以看到，static目录中应该存的是整个前端的文件夹，配置好的目录结构如下 (将仓库中的frontend文件夹改名为genesis，然后放入static文件夹中即可）
 
 ![image](https://user-images.githubusercontent.com/34564669/122196534-e45d4c00-cec9-11eb-818e-3bf2f88087f1.png)
+
+
 
 
 
