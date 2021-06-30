@@ -1,20 +1,42 @@
-# Plant-Algorand-with-NFT
+# Planet-Algorand-with-NFT
 
-6.20-6.30期间，升级了交易合约，增加了取消订单功能，优化界面与后端。
+项目名称：Planet
 
----
+战队名称：maybe战队
 
-这是Maybe战队参加algorand hackathon提交的作品，是一个基于algorand区块链的NTF交易平台，后端主要使用go语言和gin框架，前端目前使用的是bootstrap，后面可能会美化并且迁移到react上。demo地址101.133.135.126:8080/public/index.html。
+Algorand黑客松挑战主题： 基于区块链的虚拟物品交易平台
+
+我们实现了一个**基于Algorand区块链的NFT交易平台**。
+
+前端主要使用的是html，javascript 和 bootstrap3，后端主要使用go语言和gin框架，
+
+和Algorand区块链的交互都是在TestNet中进行。
+
+为了展示的方便，我们直接将前后端的代码部署到了服务器上，
+
+这里有直接展示的demo地址：[Planet-demo](http://101.133.135.126:8080/public/)  ：）
+
+需要注意的是，浏览器（推荐使用chrome）需要保持网络通畅，可以访问国外的网站，同时浏览器安装有AlgoSigner钱包。
 
 ## 如何使用
 
+如果你想本地运行程序的话，也可以选择将github仓库中的代码下载到本地，按照如下的操作指南进行操作。
+
 ### 前端代码的使用
 
-[前端部分的简介文件](https://github.com/fromddy/Planet-Algorand-with-NFT/blob/main/genesis/README.md)
+#### 基本要求
 
+运行前端代码要求安装有node.js环境， 命令行当中可以执行npm的命令。
 
-下载本仓库的代码文件，打开genesis文件夹，<br>
-在该文件夹目录下打开命令行，输入如下代码
+浏览器（推荐使用chrome）需要保持网络通畅，可以访问国外的网站。
+
+浏览器安装有AlgoSigner钱包。
+
+#### 前端代码的具体操作
+
+下载本仓库的代码文件，打开frontend文件夹,
+
+在该文件夹目录下打开命令行，输入如下命令
 
 ```
 npm install
@@ -22,8 +44,11 @@ npm install http-server
 http-server .
 ```
 
-就可以在对应的浏览器查看前端网页了。
-需要网络保持通畅，同时浏览器装有AlgoSigner钱包，且钱包可以正常运行。
+就可以在对应的地址查看前端网页了 : ）
+
+注意：现在的前端代码所访问的后端接口是定位到我们所运行的服务器上的。由于后端的配置是较为复杂的，所以我们**强烈推荐**用户通过我们所提供的 [Planet-demo](http://101.133.135.126:8080/public/) 来进行体验。
+
+如果想要更换为本地运行的后端服务，前端部分需要打开 frontend/utility文件夹，把该文件夹下所有js文件中的url接口地址修改为本地运行的后端服务的接口地址。
 
 
 
@@ -33,7 +58,7 @@ http-server .
 
 ```
 mkdir avatar # 暂存用户头像
-mkdir tmp # 暂存用户上传的ntf作品
+mkdir tmp # 暂存用户上传的NFT作品
 mkdir config # 配置文件存放处
 mkdir static # 前端页面存放处
 ```
@@ -43,74 +68,133 @@ config文件夹下需要编辑application.yaml文档，模板代码中已给出�
 ![image](https://user-images.githubusercontent.com/34564669/122196534-e45d4c00-cec9-11eb-818e-3bf2f88087f1.png)
 
 
+
 ## 功能演示
 
-### 连接钱包
+### 主页（Planet）
 
-在执行任何操作之前都需要用户连接钱包,右上角会变成用户在注册钱包时使用的昵称
+打开网址首先看到的就是 Planet页面，处于销售状态的NFT作品会在这里随机地被展示。
 
-![image](https://user-images.githubusercontent.com/34564669/123567594-19846b00-d7f5-11eb-995c-a65ab489b175.png)
+如果想要购买的话，需要点击右上角的account，注册完成和邮箱通过验证的用户会看到自己的注册昵称显示在了右上角。
 
-### 用户注册功能
+之后点击自己心仪的NFT作品 对应的 [check]按钮，就可以跳转到 voyage页面 进行更为清晰地查看和购买。
 
-说是注册，其实是用户在后端绑定邮箱和其他相关信息的一个过程。需要用户选择上传头像，用户名，邮箱地址和个人介绍，在点击signup之后，用户的邮箱会收到一封验证码邮箱，需要进行验证后才能使用其他功能。
+![pic4](https://user-images.githubusercontent.com/25214732/123894096-2ab5af00-d990-11eb-9990-b800e3bb2028.png)
 
-![image](https://user-images.githubusercontent.com/34564669/123567656-45075580-d7f5-11eb-8b4e-90040248f210.png)
+<br>
 
-### 创建NFT功能
 
-任何注册好的用户都可以上传NFT，上传之后依次点击三个按钮可以得到唯一的asset index，并且asset的note中会存有该图片在阿里云oss中的存储地址和文件哈希，以确保你的asa是独一无二的。
+### 用户注册（signup） 和 连接钱包（account）
 
-![image](https://user-images.githubusercontent.com/34564669/123567682-551f3500-d7f5-11eb-956e-f9ebb217a321.png)
+除了Planet页面 和 voyage页面 所提供的NFT作品基础展示功能以外，其他所有的操作都需要用户连接钱包（比如NFT作品的购买等）。
 
-### 查看所有资产
+点击右上角的account按钮，就会进行钱包的连接，可以选择对应的钱包地址（现阶段是TestNet上的账户），
 
-asset界面可以展示你所拥有的全部NFT，包括你购买得到的和你上传的。
+如果之前已经注册并且通过了邮箱验证的话，右上角会变成用户注册提供的昵称；
 
-![image](https://user-images.githubusercontent.com/34564669/123567792-8992f100-d7f5-11eb-8073-b57977df6dc6.png)
+初次登录的话，需要用户在signup界面进行注册，提交必要的信息后点击 [ come up to sign up ! ] 按钮，用户邮箱就会收到验证码；
 
-### 挑选你心仪的NFT作品
+将用户邮箱当中的注册码填入下方的 email verification code 输入框中，点击 [ come up to verify email ! ] 按钮 就完成了邮箱的验证。
 
-首页功能会随机刷新7张NFT，可以选择你喜欢的NFT进入购买界面购买。
+完成信息注册和邮箱验证的用户才能够方便地使用我们所提供的后续的服务 ：）
 
-![image](https://user-images.githubusercontent.com/34564669/123567879-bcd58000-d7f5-11eb-90a0-afc7673b9778.png)
+![pic1](https://user-images.githubusercontent.com/25214732/123894105-2ee1cc80-d990-11eb-9e95-5fcc5612af61.png)
 
-### NFT交易功能
 
-在商品详情界面你可以购买你想要的NFT，这一步利用了Algorand的智能合约的原子交易功能，在正常交易流程下，用户选择好NFT之后会向生成的合约地址中打钱，然后由卖家签名ASA转账的交易，最后交易完成。当然交易的第一步是要求首先添加这个ASA。
+### 上传NFT作品 (upload)
 
-交易的第一步是添加该ASA的过程，也就是add to my like list
+upload页面实现上传NFT作品的功能， 完成信息注册和邮箱验证的用户可以拥有上传NFT作品的权限。
 
-![image](https://user-images.githubusercontent.com/34564669/123568117-3c634f00-d7f6-11eb-8f29-288df506b69f.png)
+上传NFT和输入预期价格之后，点击 [ get your permission ] 按钮，在AlgoSigner钱包弹出的页面当中点击确认就可以进行NFT作品的创建，这个过程包括了将图片传送到阿里云oss服务，后端给前端返回图片存储地址，用户确认创建包含NFT信息的ASA 这三个具体的流程，用户可能需要稍微耐心的等待一小段时间。
 
-等待上一个交易的过程被确认之后，就可以进行向合约支付的过程，也就是bid
+之后点击 [ get your NFT unique ID ] 按钮，如果出现需要等待一段时间的提示，就等待5秒之后再次点击该按钮，直到出现 具体的 NFT的ID号，这里的NFT ID，就是 包含NFT信息的ASA的ID，用户可以在钱包当中的Assets处根据对应的ID进行查看。
 
-![image](https://user-images.githubusercontent.com/34564669/123568230-7af90980-d7f6-11eb-84db-676ddaea41d1.png)
+最后点击 [ create your NFT ] 按钮，出现绿色的提示框表明NFT作品已经创建成功了 ：）用户可以按照提示在asset页面的Created处查看自己创作的作品。
 
-你可以在bid界面查看你所有已经支付的订单。
+![pic2](https://user-images.githubusercontent.com/25214732/123894124-343f1700-d990-11eb-9190-f95897fb8de8.png)
 
-![image](https://user-images.githubusercontent.com/34564669/123568298-9a903200-d7f6-11eb-81e4-6280f749ed96.png)
 
-在买家完成支付之后，卖家会收到一封通知邮件，在卖家去order界面确认订单之后，整个交易过程结束。
 
-![image](https://user-images.githubusercontent.com/34564669/123569697-6d914e80-d7f9-11eb-8def-32a89a89587b.png)
 
-![image](https://user-images.githubusercontent.com/34564669/123570837-a03c4680-d7fb-11eb-96b6-43d9046addb3.png)
+### 查看资产（asset）
 
-### 取消订单功能
+在asset页面中点击 Created 按钮 后，下方会显示用户自己创作的NFT作品；
 
-在bid界面你可以查看全部的已支付的订单，并且可以选择取消订单，从合约中取走资金，并且之前被购买锁定的NFT会重新允许购买
+在asset页面点击 Collected按钮 后，下方会显示用户购买的NFT作品； 
 
-![image](https://user-images.githubusercontent.com/34564669/123569814-a0d3dd80-d7f9-11eb-97e7-42f4daa39a56.png)
+点击上方导航栏的asset后默认显示的是 Created 的作品。
 
-### 二次出售功能
+![pic3](https://user-images.githubusercontent.com/25214732/123894138-386b3480-d990-11eb-9599-935b97bd9f6a.png)
 
-对于你购买到的NFT，你可以选择在collect界面进行二次定价和出售
+<br>
 
-![image](https://user-images.githubusercontent.com/34564669/123570932-c530b980-d7fb-11eb-955b-1694098ca723.png)
 
-## TODO List
+对于单独的NFT作品来说，点击 [ check ] 按钮后会跳转到voyage页面，进行单独的展示；
 
+在Collected中的NFT作品还有[ sell ] 按钮，代表二次出售，点击之后会跳转到 sell页面，用户可以重新定价。
+
+![pic5](https://user-images.githubusercontent.com/25214732/123894151-3bfebb80-d990-11eb-8c92-839af1e66b42.png)
+
+
+
+
+
+
+### NFT交易（voyage, bid, order）
+
+在交易部分，为了理解上的方便，我们把拥有Algo币的买家称作Alice，拥有NFT作品的卖家称作Bob。
+
+买家Alice可以在voyage页面对NFT作品进行购买。 
+
+注意： voyage页面本身也承担了高清展示NFT作品的任务，点击导航栏处的voyage，或者最下方的 [change to another one ]按钮 就可以显示另外的NFT作品 ：）
+
+NFT的交易利用了Algorand的智能合约的原子交易功能，在正常交易流程下，买家选择好NFT之后会向生成的合约地址中打钱，然后由卖家签名ASA转账的交易，最后交易完成。
+
+交易的第一步是买家Alice点击 [ add to my list list ] 按钮，添加NFT作品对应的ASA到自己的钱包。
+
+![pic6](https://user-images.githubusercontent.com/25214732/123894164-415c0600-d990-11eb-951d-4ebab2dd1722.png)
+
+
+等待出现 Transaction confirmed in round xxxx 的提示后，点击 [bid] 按钮，买家Alice向托管的智能合约进行转账。
+
+![pic7](https://user-images.githubusercontent.com/25214732/123894173-4456f680-d990-11eb-9cf2-1ee537fd56f6.png)
+
+
+在买家Alice完成支付之后，卖家Bob的注册邮箱会收到一封通知邮件，提醒Bob到Order页面进行订单的确认。
+
+
+
+
+卖家Bob打开order页面，点击 [accept] 按钮之后稍等一段时间，NFT就会转移给买家Alice，同时卖家Bob从托管的智能合约中获得对应的Algo币。
+
+![pic8](https://user-images.githubusercontent.com/25214732/123894189-4a4cd780-d990-11eb-877c-baaecd91c7ff.png)
+
+
+
+卖家Alice可以在bid页面查看已经支付并且买家Bob还没有确认的的订单。
+
+卖家Alice点击[withdraw]按钮后会取消对应的订单，等待操作在区块链上被confirm后，Alice会从托管的智能合约中收回资金，之前被锁定的NFT作品会重新允许购买。
+
+![pic9](https://user-images.githubusercontent.com/25214732/123894198-4e78f500-d990-11eb-85e3-7dd64e0f6fbc.png)
+
+
+
+
+
+
+
+
+
+## 任务记录
+
+2021.6.20-2021.6.30，升级了交易合约，增加了取消订单功能，优化界面与后端。
+
+
+
+## Todo List
+
+* 对于智能合约和前后端代码进行充分的测试
+* 美化alert弹出的窗口
 * 将前端迁移至react
 * 允许alice在一段时间之后可以撤回交易（已完成）
 * 允许用户重新定价NFT并且出售（已完成）
